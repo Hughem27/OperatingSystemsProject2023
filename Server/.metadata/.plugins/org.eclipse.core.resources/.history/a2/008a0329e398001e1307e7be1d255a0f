@@ -1,0 +1,38 @@
+import java.util.Iterator;
+import java.util.LinkedList;
+
+public class Account {
+
+	LinkedList<User> myList;
+	
+	public Account()
+	{
+		myList = new LinkedList<User>();
+	}
+	
+	public synchronized void addUser(String name, String email, String PPSN, String password, String balance, String address)
+	{
+		User temp = new User(name, email, Float.parseFloat(PPSN), password, Float.parseFloat(balance), address);
+		
+		myList.add(temp);
+	}
+	
+	public synchronized String searchBook(String title)
+	{
+		Iterator<User> i = myList.iterator();
+		int found = 0;
+		String response = "Not found";
+		while(i.hasNext() && found==0)
+		{
+			User temp = i.next();
+			
+			if(temp.getAccountName().equalsIgnoreCase(title))
+			{
+				found = 1;
+				response = temp.toString();
+			}
+		}
+		
+		return response;
+	}
+}

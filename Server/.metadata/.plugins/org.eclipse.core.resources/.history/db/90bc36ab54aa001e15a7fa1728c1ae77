@@ -1,0 +1,116 @@
+import java.net.Socket;
+import java.io.*;
+
+
+public class ServerThread extends Thread{
+
+	Socket myConnection;
+	ObjectOutputStream out;
+	ObjectInputStream in;
+	String message;
+	String message1;
+	String message2;
+	String message3;
+	String message4;
+	String message5;
+	String message6;
+	
+	Lib library;
+	
+	public ServerThread(Socket s, Lib lib)
+	{
+		myConnection = s;
+		library = lib;
+	}
+	
+	public void run()
+	{
+		try
+		{
+			out = new ObjectOutputStream(myConnection.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(myConnection.getInputStream());
+		
+			//Server Comms
+			do
+			{
+				sendMessage("Please enter 1 to ADD Account or 2 to SEARCH FOR An Account or 3 for a Account listing");
+				message = (String)in.readObject();
+			
+				if(message.equalsIgnoreCase("1"))
+				{
+					sendMessage("Please enter the Acc name ");
+					message1 = (String)in.readObject();
+					
+					sendMessage("Please enter the Acc pps");
+					message2 = (String)in.readObject();
+					
+					sendMessage("Please enter the Acc email");
+					message3 = (String)in.readObject();
+					
+					sendMessage("Please enter the Acc password");
+					message4 = (String)in.readObject();
+					
+					sendMessage("Please enter the Acc address");
+					message5 = (String)in.readObject();
+					
+					sendMessage("Please enter the Acc balance");
+					message6 = (String)in.readObject();
+					
+					library.addAcc(message1, message2, message3, message4, message5, message6);
+				}
+				
+				else if(message.equalsIgnoreCase("2"))
+				{
+					sendMessage("Please enter the Account name");
+					message1 = (String)in.readObject();
+					
+					String result = library.searchAccount(message1);
+					sendMessage(result);
+				}
+				
+				else if(message.equalsIgnoreCase("3"))
+				{
+					String[] temp = library.listOfAccounts();
+					sendMessage(""+temp.length);
+					
+					for(int i=0;i<temp.length;i++)
+					{
+						sendMessage(temp[i]);
+					}
+					
+				}
+				
+				sendMessage("Please enter 1 to repeat");
+				message1 = (String)in.readObject();
+				
+			}while(message1.equalsIgnoreCase("1"));
+			
+			in.close();
+			out.close();
+		}
+		catch(ClassNotFoundException classnot)
+		{
+					System.err.println("Data received in unknown format");
+		}
+		catch(IOException e)
+		{
+			
+		}
+		
+		
+	}
+	
+	void sendMessage(String msg)
+	{
+		try{
+			out.writeObject(msg);
+			out.flush();
+			System.out.println("server>" + msg);
+		}
+		catch(IOException ioException){
+			ioException.printStackTrace();
+		}
+	}
+	
+}

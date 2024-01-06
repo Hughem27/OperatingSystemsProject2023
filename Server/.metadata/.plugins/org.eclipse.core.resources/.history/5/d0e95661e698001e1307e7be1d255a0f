@@ -1,0 +1,31 @@
+
+public class User {
+
+	private String name;
+	private String PPSN;
+	private String password;
+	private String address;
+	private float balance;
+	private float price;
+	
+	public User(String n, String o, float p, String s, float b, String a)
+	{
+		name = n;
+		PPSN = o;
+		price = p;
+		password = s;
+		address = a;
+		balance = b;
+		
+	}
+	
+	public String getAccountName()
+	{
+		return name;
+	}
+	
+	public String toString()
+	{
+		return name+"*"+PPSN+"*"+price+"*"+password+"*"+address+"*"+balance+"*"+price;
+	}
+}
